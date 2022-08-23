@@ -12,8 +12,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script>
         $(function(){
-            function output(inp) {
-                document.getElementById('data').appendChild(document.createElement('pre')).innerHTML = inp;
+            function output(id, inp) {
+                document.getElementById(id).appendChild(document.createElement('pre')).innerHTML = inp;
                 $("i").on("click", function(){
                     var area = $(this).parent(".scob").children(".area");
                     var icon = $(this).parent(".scob").children("i");
@@ -87,7 +87,23 @@
                         null,
                         2
                     );
-                    output(syntaxHighlight(str));
+                    output('data', syntaxHighlight(str));
+                }
+            });
+
+            $.ajax({
+                url: '<?= $url ?>',
+                method: 'POST',
+                data: {
+                    message: '[{"jsonrpc": "2.0", "method": "getEthereumDate", "id": 1},{"jsonrpc": "2.0", "method": "getParams", "params": {"Var1": 1000, "Var2": 2000}, "id": 2}]'
+                },
+                success: function (json){
+                    let str = JSON.stringify(
+                        JSON.parse(json),
+                        null,
+                        2
+                    );
+                    output('data2', syntaxHighlight(str));
                 }
             });
         });
@@ -100,10 +116,11 @@
 </nav>
 <div class="container" style="margin-top: 20px;">
     <div class="row">
+        <h3>Запрос #1</h3><br>
         <div class="col-md-12">
-            <h3>JSON строка</h3>
+            <h5>JSON строка</h5>
             <p>{"jsonrpc": "2.0", "method": "getEthereumDate", "id": 1}</p>
-            <h3>CURL запрос</h3>
+            <h5>CURL запрос</h5>
             <p>
                 <span style="color:#30a;">curl</span>  <span style="color:#a11;">'<?=$url?>'</span> \<br>
                 <span style="color:#30a; margin-left: 15px;">-H</span> <span style="color:#a11;">'Content-Type: application/x-www-form-urlencoded; charset=UTF-8'</span> \<br>
@@ -112,8 +129,25 @@
             </p>
         </div>
         <div class="col-md-12">
-            <h3>JSON ответ</h3>
+            <h5>JSON ответ</h5>
             <p id="data"></p>
+        </div>
+
+        <h3>Запрос #2</h3><br>
+        <div class="col-md-12">
+            <h5>JSON строка</h5>
+            <p>[{"jsonrpc": "2.0", "method": "getEthereumDate", "id": 1},{"jsonrpc": "2.0", "method": "getParams", "params": {"Var1": 1000, "Var2": 2000}, "id": 2}]</p>
+            <h5>CURL запрос</h5>
+            <p style="overflow: auto;">
+                <span style="color:#30a;">curl</span>  <span style="color:#a11;">'<?=$url?>'</span> \<br>
+                <span style="color:#30a; margin-left: 15px;">-H</span> <span style="color:#a11;">'Content-Type: application/x-www-form-urlencoded; charset=UTF-8'</span> \<br>
+                <span style="color:#30a; margin-left: 15px;">--data-raw</span> <span style="color:#a11;">'message=%5B%7B%22jsonrpc%22%3A+%222.0%22%2C+%22method%22%3A+%22getEthereumDate%22%2C+%22id%22%3A+1%7D%2C%7B%22jsonrpc%22%3A+%222.0%22%2C+%22method%22%3A+%22getParams%22%2C+%22params%22%3A+%7B%22Var1%22%3A+1000%2C+%22Var2%22%3A+2000%7D%2C+%22id%22%3A+2%7D%5D'</span> \<br>
+                <span style="color:#30a; margin-left: 15px;">--compressed</span>
+            </p>
+        </div>
+        <div class="col-md-12">
+            <h5>JSON ответ</h5>
+            <p id="data2"></p>
         </div>
 
         <div class="col-md-12">

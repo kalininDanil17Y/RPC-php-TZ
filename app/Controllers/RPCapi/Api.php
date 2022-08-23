@@ -44,10 +44,35 @@ class Api extends \MainController
         if (count($input) == 0)
             return $this->invalidRequest();
 
+        // Если это массив с несколькими RPC, запускаем циклом
+        if ($input[0] !== null)
+        {
+            $outputs = [];
+            foreach ($input as $item)
+            {
+                $outputs[] = $this->makeResponse($item);
+            }
+            return $outputs;
+        }
+
+        return $this->makeResponse($input);
+    }
+
+    /**
+     * Генерация ответа
+     *
+     * @param $input
+     * @return array
+     */
+    public function makeResponse($input): array
+    {
+        if (!is_array($input))
+            $output = $this->error(0, 'Parse error', ErrorCodes::PARSE_ERROR);
+
         // Получаем id'шник
         $id = 0;
-        if (array_key_exists('id', $input) && is_int($input['id']))
-            $id = $input['id'];
+        if (array_key_exists('id', $input) && (is_int($input['id']) || is_string($input['id'])))
+            $id = intval($input['id']);
 
         // Сравниваем версии
         if ($input['jsonrpc'] !== self::RPC_VERSION)
@@ -72,6 +97,8 @@ class Api extends \MainController
     }
 
     /**
+     * Вызов метода
+     *
      * @param int $id
      * @param string $method
      * @param array $params
