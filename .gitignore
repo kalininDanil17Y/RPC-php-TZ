@@ -1,0 +1,41 @@
+# phpstorm project files
+/.idea
+/.idea/*
+
+# visualstudio files
+/.vscode
+/.vscode/*
+
+# working files
+/storage/*
+!/storage/logs/.gitkeep
+!/storage/public/.gitkeep
+/storage/cache/routes/routes.txt
+!/storage/cache/routes/.gitkeep
+!/storage/cache/key/.gitkeep
+!/storage/cache/templates/.gitkeep
+
+# database settings to production
+/database/dbase.config.php
+
+# framework settings to production
+/start.hleb.php
+
+# phpunit itself is not needed
+phpunit.phar
+
+# local phpunit config
+/phpunit.xml
+/.phpunit.result.cache
+
+# docker-compose config
+docker-compose.override.yml
+
+# windows thumbnail cache
+Thumbs.db
+
+# Mac DS_Store Files
+.DS_Store
+
+# Composer authentication credentials
+auth.json

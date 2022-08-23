@@ -1,0 +1,104 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "dd27717ca9e8b8b7f04cbaaa2cfd16ab",
+    "packages": [
+        {
+            "name": "phphleb/debugpan",
+            "version": "v1.8",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phphleb/debugpan.git",
+                "reference": "42eaf9b566699814d7f0a403eceebe8ee61fa104"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phphleb/debugpan/zipball/42eaf9b566699814d7f0a403eceebe8ee61fa104",
+                "reference": "42eaf9b566699814d7f0a403eceebe8ee61fa104",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.0.0 || ^8.0.0",
+                "phphleb/framework": "^1.5.52"
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Foma Tuturov",
+                    "email": "fomiash@yandex.ru"
+                }
+            ],
+            "description": "Debug panel for Micro-Framework HLEB",
+            "homepage": "https://phphleb.ru",
+            "support": {
+                "source": "https://github.com/phphleb/debugpan/tree/v1.8"
+            },
+            "time": "2021-12-24T16:28:53+00:00"
+        },
+        {
+            "name": "phphleb/framework",
+            "version": "v1.6.69",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phphleb/framework.git",
+                "reference": "9ccf75fdc1aa5c292fd002df8f87119aaf058edb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phphleb/framework/zipball/9ccf75fdc1aa5c292fd002df8f87119aaf058edb",
+                "reference": "9ccf75fdc1aa5c292fd002df8f87119aaf058edb",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "php": ">=7.0.0"
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Foma Tuturov",
+                    "email": "fomiash@yandex.ru"
+                }
+            ],
+            "description": "Engine for Micro-Framework HLEB",
+            "homepage": "https://phphleb.ru",
+            "keywords": [
+                "framework",
+                "hleb",
+                "micro-framework",
+                "microframework",
+                "php",
+                "php framework",
+                "phphleb"
+            ],
+            "support": {
+                "source": "https://github.com/phphleb/framework/tree/v1.6.69"
+            },
+            "time": "2022-08-17T08:23:40+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "dev",
+    "stability-flags": [],
+    "prefer-stable": true,
+    "prefer-lowest": false,
+    "platform": {
+        "php": ">=7.0.0",
+        "ext-json": "*",
+        "ext-pdo": "*"
+    },
+    "platform-dev": [],
+    "plugin-api-version": "2.1.0"
+}
