@@ -93,7 +93,7 @@ class Api extends \MainController
             }
         }
 
-        return $this->RPChandle($id, $input['method'], $params);;
+        return $this->RPChandle($id, $input['method'], $params);
     }
 
     /**
