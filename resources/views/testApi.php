@@ -12,49 +12,19 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script>
         $(function(){
-            function output(id, inp) {
-                document.getElementById(id).appendChild(document.createElement('pre')).innerHTML = inp;
-                $("i").on("click", function(){
-                    var area = $(this).parent(".scob").children(".area");
-                    var icon = $(this).parent(".scob").children("i");
-                    area.toggle();
-                    if (area.is(":hidden")) {
-                        icon.removeClass("fa-angle-down");
-                        icon.addClass("fa-angle-left");
-                        //<i style="margin-left:4px;color:#000e59;" class="fa-solid fa-angle-left"></i>
-                    } else {
-                        icon.removeClass("fa-angle-left");
-                        icon.addClass("fa-angle-down");
-                        //<i style="margin-left:4px;color:#000e59;" class="fa-solid fa-angle-down"></i>
-                    }
-                });
-            }
-            function syntaxHighlight(json) {
+            function outputSyntaxHighlight(id, json) {
                 json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-                return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)|(\{)|(\})/g, function (match) {
+                document.getElementById(id).appendChild(document.createElement('pre')).innerHTML = json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)|(\{)|(\})/g, function (match) {
 
                     var style = 'color: #000e59;';
 
                     if(match == "{"){
-                        return '<span class="scob"><span style="color: #000;">{</span><i style="margin-left:3px; margin-right:3px; color:#025900; cursor: pointer;" class="fa-solid fa-angle-down"></i><span class="area" style="">';
+                        return '<span class="scob"><span style="color: #000;">{</span><i style="margin-left:3px; margin-right:3px; color:#025900; cursor: pointer;" class="togglecl-'+id+' fa-solid fa-angle-down"></i><span class="area" style="">';
                     }
 
                     if(match == "}"){
                         return '</span><span style="color: #000;">}</span></span>';
                     }
-
-                    // if (/^"/.test(match)) {
-                    //     if (/:$/.test(match)) {
-                    //         style = 'color: #000;';
-                    //     } else {
-                    //         style = 'color: #025900; font-weight: 600;';
-                    //     }
-                    // } else if (/true|false/.test(match)) {
-                    //     style = 'color: #600100; font-weight: 600;';
-                    // } else if (/null/.test(match)) {
-                    //     style = 'color: red; font-weight: 600;';
-                    // }
-
 
                     style = 'color: #ff5370;';
 
@@ -73,6 +43,20 @@
 
                     return '<span style="' + style + '">' + match + '</span>';
                 });
+
+                $(".togglecl-" + id).on("click", function(){
+                    var area = $(this).parent(".scob").children(".area");
+                    var icon = $(this);
+                    area.toggle();
+                    if (area.is(":hidden")) {
+                        icon.removeClass("fa-angle-down");
+                        icon.addClass("fa-angle-left");
+                    } else {
+                        icon.removeClass("fa-angle-left");
+                        icon.addClass("fa-angle-down");
+                    }
+
+                });
             }
 
             $.ajax({
@@ -87,7 +71,7 @@
                         null,
                         2
                     );
-                    output('data', syntaxHighlight(str));
+                    outputSyntaxHighlight('data', str);
                 }
             });
 
@@ -103,7 +87,7 @@
                         null,
                         2
                     );
-                    output('data2', syntaxHighlight(str));
+                    outputSyntaxHighlight('data2', str);
                 }
             });
         });
