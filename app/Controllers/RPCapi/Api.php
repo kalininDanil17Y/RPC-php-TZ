@@ -23,26 +23,26 @@ class Api extends \MainController
         // Преобразуем JSON в Array
         $input = json_decode($message, true);
 
-        // Если массив, обработать, если что-то иное вывести ошибку
-        if (is_array($input)) {
-            $output = $this->process($input); // По хорошему бы вынести в отдельный класс
-        } else {
-            $output = $this->error(0, 'Parse error', ErrorCodes::PARSE_ERROR);
-        }
+        $output = $this->RPCProcess($input); // По хорошему бы вынести в отдельный класс
 
         // Вернуть JSON ответ
         return json_encode($output, JSON_UNESCAPED_UNICODE);
     }
 
     /**
-     * @param array $input
+     * Проверяем входящий json-массив RPC
+     *
+     * @param $input
      * @return array
      */
-    private function process(array $input): array
+    private function RPCProcess($input): array
     {
+        if (!is_array($input))
+            return $this->RPCParseError();
+
         // Не пустой ли массив?
         if (count($input) == 0)
-            return $this->invalidRequest();
+            return $this->RPCInvalidRequest();
 
         // Если это массив с несколькими RPC, запускаем циклом
         if ($input[0] !== null)
@@ -50,24 +50,24 @@ class Api extends \MainController
             $outputs = [];
             foreach ($input as $item)
             {
-                $outputs[] = $this->makeResponse($item);
+                $outputs[] = $this->RPCmakeResponse($item);
             }
             return $outputs;
         }
 
-        return $this->makeResponse($input);
+        return $this->RPCmakeResponse($input);
     }
 
     /**
-     * Генерация ответа
+     * Генерация ответа RPC
      *
      * @param $input
      * @return array
      */
-    public function makeResponse($input): array
+    public function RPCmakeResponse($input): array
     {
         if (!is_array($input))
-            $output = $this->error(0, 'Parse error', ErrorCodes::PARSE_ERROR);
+             return $this->RPCParseError();
 
         // Получаем id'шник
         $id = 0;
@@ -76,11 +76,11 @@ class Api extends \MainController
 
         // Сравниваем версии
         if ($input['jsonrpc'] !== self::RPC_VERSION)
-            return $this->invalidRequest($id);
+            return $this->RPCInvalidRequest($id);
 
         // Проверяем что метод есть и он строка
         if (!array_key_exists('method', $input) || !is_string($input['method']))
-            return $this->invalidRequest($id);
+            return $this->RPCInvalidRequest($id);
 
 
         // Получаем параметры
@@ -89,43 +89,53 @@ class Api extends \MainController
             $params = $input['params'];
 
             if (!is_array($params)) {
-                return $this->invalidRequest($id);
+                return $this->RPCInvalidRequest($id);
             }
         }
 
-        return $this->handle($id, $input['method'], $params);;
+        return $this->RPChandle($id, $input['method'], $params);;
     }
 
     /**
-     * Вызов метода
+     * Вызов метода RPC
      *
      * @param int $id
      * @param string $method
      * @param array $params
      * @return array
      */
-    private function handle(int $id, string $method, array $params): array
+    private function RPChandle(int $id, string $method, array $params): array
     {
         if ($method == "getEthereumDate") {
-            return $this->response($id, ['DateTime' => date('Y-m-d H:i:s'), 'UNIXtime' => time()]);
+            return $this->RPCResponse($id, ['DateTime' => date('Y-m-d H:i:s'), 'UNIXtime' => time()]);
         }
 
         if ($method == "getParams") {
-            return $this->response($id, $params);
+            return $this->RPCResponse($id, $params);
         }
 
-        return $this->error($id, 'Method not found', ErrorCodes::METHOD_NOT_FOUND);;
+        return $this->RPCRError($id, 'Method not found', ErrorCodes::METHOD_NOT_FOUND);;
     }
 
     /**
-     * Неверный запрос
+     * Неверный запрос RPC
      *
      * @param int $id
      * @return array
      */
-    private function invalidRequest(int $id = 0): array
+    private function RPCInvalidRequest(int $id = 0): array
     {
-        return $this->error($id, 'Invalid request', ErrorCodes::INVALID_REQUEST);
+        return $this->RPCRError($id, 'Invalid request', ErrorCodes::INVALID_REQUEST);
+    }
+
+    /**
+     * Ошибка парсинга RPC
+     *
+     * @return array
+     */
+    private function RPCParseError(): array
+    {
+        return $this->RPCRError(0, 'Parse error', ErrorCodes::PARSE_ERROR);
     }
 
 
@@ -139,7 +149,7 @@ class Api extends \MainController
      * @param array|null $data
      * @return array
      */
-    private function error(int $id, string $message, int $code, array $data = null): array
+    private function RPCRError(int $id, string $message, int $code, array $data = null): array
     {
         // Создаём template ошибки
         $error = [
@@ -173,7 +183,7 @@ class Api extends \MainController
      * @param array $result
      * @return array
      */
-    private function response(int $id, array $result): array
+    private function RPCResponse(int $id, array $result): array
     {
         $output = [
             'jsonrpc' => self::RPC_VERSION,
